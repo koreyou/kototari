@@ -1,0 +1,77 @@
+.main-content {
+    padding: 0 32px 50px 32px;
+}
+
+.search-box {
+    max-width: 200px;
+}
+
+.md-card {
+    display: inline-block;
+    margin: 4px;
+    overflow: hidden;
+    vertical-align: top;
+    width: 240px;
+}
+
+.card-text {
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-text:after {
+    background: linear-gradient(to top,
+				rgba(255,255,255, 1) 10%,
+				rgba(255,255,255, 0) 90%
+			       );
+    bottom: 0;
+    content: "";
+    height: 100%;
+    left: 0;
+    margin: 0;
+    pointer-events: none; /* so the text is still selectable */
+    position: absolute;
+    width: 100%;
+}
+
+.badge {
+    align-items: center;
+    background: red;
+    border-radius: 100%;
+    color: #fff;
+    display: flex;
+    font-family: monospace;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+    height: 19px;
+    justify-content: center;
+    letter-spacing: -.05em;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 19px;
+}
+
+.viewport {
+    display: inline-block;
+    overflow: auto;
+    vertical-align: top;
+    width: 45%;
+}
+
+.progress-spinner-container {
+    padding: 50px;
+    text-align: center;
+}
+
+.md-dialog {
+    max-width: 768px;
+    min-height: 300px;
+    padding: 16px;
+}
+
+.value-stepper {
+    height: 15px;
+}

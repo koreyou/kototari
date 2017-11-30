@@ -1,0 +1,92 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>A Simplified Debating AI</title>
+  <meta
+    content="width=device-width,initial-scale=1,minimal-ui"
+    name="viewport"
+  >
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons"
+  >
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css"
+  >
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/vue-material@beta/dist/theme/default.css"
+  >
+  <link rel="stylesheet" href="/file/index.css">
+</head>
+<body>
+  <div id="app">
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-section-start">
+	<h1 class="md-title">A Simplified Debating AI</h1>
+      </div>
+	<div class="md-toolbar-section-end">
+  	<md-dialog-prompt
+	   :md-active.sync="authPrompt"
+	   v-model="authKey"
+	   md-title="Enter authentication key"
+	   md-input-maxlength="30"
+	   md-input-placeholder="lCVMjb1bjGAxz0rZqLsdXLXE7TxvQO"
+	   md-confirm-text="Done"
+           @md-confirm="authenticate"
+	   >
+        </md-dialog-prompt>
+	<md-button class="md-icon-button" :disabled="authStatus == 1" @click="authPrompt = true">
+	  <md-icon v-if="authStatus == 0">lock</md-icon>
+	  <md-icon v-if="authStatus == 1">autorenew</md-icon>
+	  <md-icon v-if="authStatus == 2">lock_open</md-icon>
+	  <md-icon v-if="authStatus == 3">error</md-icon>
+	</md-button>
+      </div>      
+    </md-toolbar>
+
+    <div class="main-content">
+      <form class="md-toolbar-row md-gutter" @submit.prevent="search">
+        <md-field :md-clearable="inProcess != 1" class="search-box">
+          <label>Keyword</label>
+          <md-input v-model="keyword"
+                    :readonly="inProcess == 1 || authStatus != 2"
+                    id="search-box" required></md-input>
+        </md-field>
+      </form>
+      <div class="progress-spinner-container" v-if="inProcess == 1" >
+        <md-progress-spinner md-mode="indeterminate" :md-diameter="200"
+            :md-stroke="10"></md-progress-spinner>
+      </div>
+      <!-- Vue.jsのComponent機能を使用 -->
+      <card-container :result="result" position="for" :sentences="sentences"
+          :select-value="selectValue" title="賛成" v-if="inProcess == 2">
+      </card-container>
+      <card-container :result="result" position="against" :sentences="sentences"
+          :select-value="selectValue" title="反対" v-if="inProcess == 2">
+      </card-container>
+    </div>
+    <template>
+      <md-dialog :md-active.sync="showDialog">
+        <md-dialog-title>{{ selectedValue }}</md-dialog-title>
+        <div>
+          <md-steppers class="value-stepper" @md-changed="getAudio">
+            <template v-for="v in result[selectedPosition][selectedValue]">
+              <md-step :id="v">
+                {{ sentences[v].text }}
+              </md-step>
+            </template>
+          </md-steppers>
+          <audio ref="audio" :src="audioURL" preload="auto"></audio>
+        </div>
+      </md-dialog>
+    </template>
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+  <script src="https://unpkg.com/vue-material@beta"></script>
+  <script src="/file/main.js"></script>
+</body>
+</html>
