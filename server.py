@@ -125,23 +125,27 @@ def trend(word):
     params = {'keyword': word}
     r = requests.get(
         url, params=params, headers=headers, verify=False)
+
     json_ = r.json()
     score = json_['score']
-    return score
+
+    text = [0] * len(json_['reason']) * len(json_['reason'][0]['contexts'][0])
+
+    for i in range(len(json_['reason'])):
+        contexts = json_['reason'][i]['contexts']
+        for j in range(len(contexts[i - 1])):
+            text[i * len(contexts[i - 1]) + j] = contexts[j - 1]['text']
+
+    return score, text
  
 
 @get('/trend-score')
 def trend_score():
-    score = trend("残業")
+    score, text = trend("残業")
     # ここに投稿数を書く
     return {
         "score": score,
-        "sentences": [
-            "またはを、引用文を利用しれている原則でそのまま満たししれものも、著作ますた、場合としては公表権の表示による条件上の問題はすることを、被投稿家は、法的の保護をさばコンテンツが引用さあるているないます。",
-            "しかしたとえは、侵害記事に抜粋認められばなり著者で仮に考慮なる、記事中と注意さこととして、文字の方法としてペディアの利用をなく侵害することにします。",
-            "ただし、作家が要件にあり主題による、その俳句のフェアと危うく編集できれている方法の場合から著作しと、記事権に対象にするメディアという、その両国物の可能確認の一部が回避よれやさ言語あっ。",
-            "そのようませ引用節は、文に参照必要号の対処を可能否とするタイトルを、直ちになるのりはしですます。",
-        ]        
+        "sentences": text
     }
 
 @get('/merits')
