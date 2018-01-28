@@ -139,6 +139,26 @@ def trend(word):
     return score, text
  
 
+def filter_by_classifier(sentences, label):
+    classifier_id = "18d712d5-0361-4042-ac13-f9caa3823bbf"
+    key = "sfW0zobmuhqrLKL2EISTRn56URBTU0"
+    headers = {
+        'Authorization': "Bearer " + key,
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+    }
+    url = 'https://133.145.160.206/ml/v1/classifiers/'
+    r = requests.post(
+        url + classifier_id, json=sentences, headers=headers, verify=False)
+    if 200 <= r.status_code < 300:
+        return [
+            t for t, p in zip(sentences, r.json()["predictions"])
+            if p == label
+        ]
+    else:
+        print("Whoops, classifier failed! %s", r.content)
+        return sentences
+
 @get('/trend-score')
 def trend_score():
     score, text = trend("残業")
@@ -151,12 +171,14 @@ def trend_score():
 @get('/merits')
 def get_merits():
     relationResults = relationGen('affect', '残業', None)
+    #relationResults = filter_by_classifier(relationResults, "-1")
     return {"sentences": relationResults}
 
 
 @get('/measures')
 def get_measures():
     relationResults = relationGen('affect', None, '残業')
+    #relationResults = filter_by_classifier(relationResults, "1")
     return {"sentences": relationResults}
 
 
