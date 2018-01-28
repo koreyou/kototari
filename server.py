@@ -140,7 +140,7 @@ def trend_score():
 
 @get('/merits')
 def get_merits():
-
+    relationResults = relationGen('affect', '残業', None)
     return {"sentences": relationResults}
 
 
