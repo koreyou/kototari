@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import division
+from __future__ import division, unicode_literals
 import argparse
 import json
 
@@ -38,8 +38,7 @@ def _index_html():
     return static_file('spittoon.html', root='./static')
 
 
-def calc_mention_score(human):
-    # ここに投稿数を書
+def calc_mention_score(human, pick_string):
 
     # keyには自分で取得したAuthorization Tokenをいれる
     key = "n0eFu6OHQDN3yzfveQqTJav0nIsevy"
@@ -67,10 +66,15 @@ def calc_mention_score(human):
         except:
             s = ''
 
-        s2 = u'残業が'
-        s3 = u'残業は'
+        s2 = pick_string + u'が'
+        s3 = pick_string + u'は'
 
-        if s == s2.encode('utf-8') or s == s3.encode('utf-8'):
+        s2 = str(s2.encode('utf-8'))
+        s3 = str(s3.encode('utf-8'))
+
+        #if s == s2.encode('utf-8') or s == s3.encode('utf-8'):
+        if s == s2 or s == s3:
+
             count = count + 1
 
     ret = [0, 0]
@@ -89,7 +93,7 @@ def mention_score():
                 sentences.append(json.loads(line)["title"])
             except ValueError:
                 pass
-    num_all, num = calc_mention_score(sentences)
+    num_all, num = calc_mention_score(sentences, "残業")
     return {
         "num": num,
         "numall": num_all,
