@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import argparse
-import shelve
+import json
 
 import bottle
-from bottle import static_file, route, get, post
+from bottle import static_file, route, get, post, request
 
 app = application = bottle.default_app()
 
@@ -12,6 +12,29 @@ app = application = bottle.default_app()
 @route('/')
 def _index_html():
     return static_file('index.html', root='./static')
+
+
+@get('/posts')
+def get_posts():
+    posts = []
+    with open('db.txt') as fin:
+        for line in fin:
+            try:
+                posts.append(json.loads(line))
+            except ValueError:
+                pass
+    return {"posts": posts}
+
+
+@post('/posts')
+def post_posts():
+    db.write(json.dumps(request.json) + '\n')
+    db.flush()
+
+
+@route('/spittoon')
+def _index_html():
+    return static_file('spittoon.html', root='./static')
 
 
 @get('/mention-score')
@@ -78,18 +101,6 @@ def get_measures():
     ]}
 
 
-@post('/comments')
-def post_comment(s):
-    sents = db["comments"]
-    sents.append(s)
-    db["comments"] = sents
-
-
-def init_db():
-    if "comments" not in db:
-        db["comments"] = []
-
-
 @route('/file/<filename:path>')
 def static(filename):
     return static_file(filename, root='./static')
@@ -104,8 +115,7 @@ def parse_args():
 if __name__ == "__main__":
     opt = parse_args()
     try:
-        db = shelve.open("db")
-        init_db()
+        db = open("db.txt", mode='a')
         bottle.run(host='0.0.0.0', port=opt.port)
     finally:
         db.close()

@@ -1,0 +1,79 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>A Simplified Debating AI</title>
+  <meta
+     content="width=device-width,initial-scale=1,minimal-ui"
+     name="viewport"
+     >
+  <link
+     rel="stylesheet"
+     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons"
+     >
+  <link
+     rel="stylesheet"
+     href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css"
+     >
+  <link
+     rel="stylesheet"
+     href="https://unpkg.com/vue-material@beta/dist/theme/default.css"
+     >
+  <link rel="stylesheet" href="/file/index.css">
+</head>
+<body>
+  <div id="app">
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-section-start">
+        <h1 class="md-title">Gossiper App</h1>
+      </div>
+    </md-toolbar>
+    <div class="main-content">
+      <md-dialog :md-active.sync="showDialog">
+        <md-dialog-title>Post</md-dialog-title>
+        <div class="md-layout-row md-layout-wrap md-gutter">
+          <div class="md-flex md-flex-small-100 dialog-content">
+          <md-field>
+            <label>Title</label>
+            <md-input v-model="postTitle"
+                      placeholder="会議が長い。">
+            </md-input>
+          </md-field>
+          <md-field>
+            <label>Comment</label>
+            <md-textarea v-model="postContent"></md-textarea>
+          </md-field>
+          </div>
+        </div>
+        <md-dialog-actions>
+          <md-button class="md-primary" @click="showDialog = false">Close</md-button>
+          <md-button class="md-primary" @click="postPosts()">Save</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+      <div class="md-layout md-layout-gutter">
+        <md-card md-with-hover
+                 class="md-layout-item md-size-100"
+                 v-for="(item, index) in posts"
+                 :key="index">
+          <md-ripple>
+            <md-card-content class="md-card-sentence">
+              <md-subheading>
+                {{ item.title }}
+              </md-subheading>
+              {{ item.content }}
+            </md-card-content>
+          </md-ripple>
+        </md-card>
+      </div>
+      <md-speed-dial class="md-bottom-right">
+        <md-speed-dial-target @click="showDialog = true">
+          <md-icon>add</md-icon>
+        </md-speed-dial-target>
+      </md-speed-dial>
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+  <script src="https://unpkg.com/vue-material@beta"></script>
+  <script src="/file/spittoon.js"></script>
+</body>
+</html>
