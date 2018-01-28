@@ -5,6 +5,7 @@ import json
 
 import bottle
 from bottle import static_file, route, get, post, request
+import requests
 
 app = application = bottle.default_app()
 
@@ -37,9 +38,45 @@ def _index_html():
     return static_file('spittoon.html', root='./static')
 
 
-def calc_mention_score(sentences):
+def calc_mention_score(human):
     # ここに投稿数を書
-    return 6.0, 10.0
+
+    # keyには自分で取得したAuthorization Tokenをいれる
+    key = "n0eFu6OHQDN3yzfveQqTJav0nIsevy"
+    headers = {
+        'Authorization': "Bearer " + key,
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+    }
+    url = 'https://133.145.160.206/nlu/v1/sentences/relations'
+
+    count_all = 0
+    count = 0
+
+    for i in range(0, len(human)):
+        count_all = count_all + 1
+
+        params = {'text': human[i]}
+        r = requests.get(
+            url, params=params, headers=headers, verify=False)
+        try:
+            json_ = r.json()
+            subject = json_['results'][json_['num'] - 1]['subject']
+            s = str(subject.encode('utf-8'))
+
+        except:
+            s = ''
+
+        s2 = u'残業が'
+        s3 = u'残業は'
+
+        if s == s2.encode('utf-8') or s == s3.encode('utf-8'):
+            count = count + 1
+
+    ret = [0, 0]
+    ret[0] = count_all
+    ret[1] = count
+    return ret
 
 
 @get('/mention-score')
@@ -52,7 +89,7 @@ def mention_score():
                 sentences.append(json.loads(line)["title"])
             except ValueError:
                 pass
-    num, num_all = calc_mention_score(sentences)
+    num_all, num = calc_mention_score(sentences)
     return {
         "num": num,
         "numall": num_all,
@@ -76,11 +113,29 @@ def publicity_score():
         ]
     }
 
+def trend(word):
+    # keyには自分で取得したAuthorization Tokenをいれる
+    key = "sfW0zobmuhqrLKL2EISTRn56URBTU0"
+    headers = {
+        'Authorization': "Bearer " + key,
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+    }
+    url = 'https://133.145.160.206/company/v1/event/trend'
+    params = {'keyword': word}
+    r = requests.get(
+        url, params=params, headers=headers, verify=False)
+    json_ = r.json()
+    score = json_['score']
+    return score
+ 
+
 @get('/trend-score')
 def trend_score():
+    score = trend("残業")
     # ここに投稿数を書く
     return {
-        "score": 1.345,
+        "score": score,
         "sentences": [
             "またはを、引用文を利用しれている原則でそのまま満たししれものも、著作ますた、場合としては公表権の表示による条件上の問題はすることを、被投稿家は、法的の保護をさばコンテンツが引用さあるているないます。",
             "しかしたとえは、侵害記事に抜粋認められばなり著者で仮に考慮なる、記事中と注意さこととして、文字の方法としてペディアの利用をなく侵害することにします。",
