@@ -69,7 +69,6 @@
 }
 
 img.logo {
-    width: 100px;
-   // border-radius: 20%;
-   // height: 200px;
+    width: 60px;
+    margin: 0 10px 0 10px;
 }
