@@ -100,17 +100,11 @@ def mention_score():
 @get('/publicity-score')
 def publicity_score():
     # ここに投稿数を書く
+    relationResults = relationGen('affect','残業',None)
     return {
-        "num": 400,
+        "num": len(relationResults),
         "numall": 1000,
-        "sentences": [
-            "またはを、引用文を利用しれている原則でそのまま満たししれものも、著作ますた、場合としては公表権の表示による条件上の問題はすることを、被投稿家は、法的の保護をさばコンテンツが引用さあるているないます。",
-            "しかしたとえは、侵害記事に抜粋認められばなり著者で仮に考慮なる、記事中と注意さこととして、文字の方法としてペディアの利用をなく侵害することにします。",
-            "ただし、作家が要件にあり主題による、その俳句のフェアと危うく編集できれている方法の場合から著作しと、記事権に対象にするメディアという、その両国物の可能確認の一部が回避よれやさ言語あっ。",
-            "枠組みは例例に侵害定め裁判でますため、受信しれるサーバを投稿権可能の利用要件がしれるてはいいない、フリーの有償は、利用できprojectが参考なるものとして著作明確ですですているあっな。",
-            "および、ペディアの閲覧権は、主題の理解し引用必要で法律から著作さ、そのLicenseでできて対象と引用避ける下が著作満たしれある。",
-            "そのようませ引用節は、文に参照必要号の対処を可能否とするタイトルを、直ちになるのりはしですます。",
-        ]
+        "sentences": relationResults
     }
 
 def trend(word):
@@ -146,20 +140,49 @@ def trend_score():
 
 @get('/merits')
 def get_merits():
-    return []
+
+    return {"sentences": relationResults}
+
 
 @get('/measures')
 def get_measures():
-    return {"sentences": [
-        "枠組みは例例に侵害定め裁判でますため、受信しれるサーバを投稿権可能の利用要件がしれるてはいいない、フリーの有償は、利用できprojectが参考なるものとして著作明確ですですているあっな。",
-        "および、ペディアの閲覧権は、主題の理解し引用必要で法律から著作さ、そのLicenseでできて対象と引用避ける下が著作満たしれある。",
-        "またはを、引用文を利用しれている原則でそのまま満たししれものも、著作ますた、場合としては公表権の表示による条件上の問題はすることを、被投稿家は、法的の保護をさばコンテンツが引用さあるているないます。",
-        "編集さて、これの判断は無いでもしますます。",
-        "また、被引用者で、列挙し文の作風、列が明瞭に執筆設ける下をするて、疑義要件の利用で両国が著作さことがするおよび、信頼考えんメディアで保持、投稿者公開ませないとの創作にできことは、そのまま短いとしてよいなで。",
-        "しかしたとえは、侵害記事に抜粋認められばなり著者で仮に考慮なる、記事中と注意さこととして、文字の方法としてペディアの利用をなく侵害することにします。",
-        "ただし、作家が要件にあり主題による、その俳句のフェアと危うく編集できれている方法の場合から著作しと、記事権に対象にするメディアという、その両国物の可能確認の一部が回避よれやさ言語あっ。",
-        "そのようませ引用節は、文に参照必要号の対処を可能否とするタイトルを、直ちになるのりはしですます。",
-    ]}
+    relationResults = relationGen('affect', None, '残業')
+    return {"sentences": relationResults}
+
+
+# Get results from relation-search
+def relationGen(Relation, Subject, Object):
+    # keyには自分で取得したAuthorization Tokenをいれる
+    key = "jPlmWQQFI5GnpRMSuURWqnbFlVwd4g"
+    headers = {
+        'Authorization': "Bearer " + key,
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+    }
+    # Parameter Inputs
+    url = 'https://133.145.160.206/nlu/v1/sentences:relation-search'
+    params = {'relation': Relation,'subject': Subject,'object': Object}
+    #params = {'relation': 'affect','object': '残業'}
+    r = requests.get(
+        url, params=params, headers=headers, verify=False)
+
+    json_ = r.json()
+    #import pdb; pdb.set_trace()
+    results = json_['results']
+    if 200 <= r.status_code < 300:
+        # OK: リスポンス本体を取得
+        #print(json.dumps(r.json(), ensure_ascii=False, indent=2))
+        sentences = []
+        print('results:')
+        for i in range(len(results)):
+            #print(i)
+            s = json_['results'][i]['text'] 
+            sentences.append(s.encode('utf-8'))
+    else:
+        # エラー処理
+        print("GET /company:lawsuit-search failed!")
+    
+    return sentences
 
 
 @route('/file/<filename:path>')
