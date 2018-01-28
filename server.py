@@ -8,6 +8,8 @@ from bottle import static_file, route, get, post, request
 import requests
 
 app = application = bottle.default_app()
+requests.packages.urllib3.disable_warnings(
+    requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 @route('/')
