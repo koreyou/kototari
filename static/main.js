@@ -38,8 +38,8 @@ class Publicity extends Metric {
   constructor(size, score, sentences) {
     super(size, score, sentences);
     this.color = "teal";
-    this.title = "検索ヒット";
-    this.titleEn = "Hits"
+    this.title = "メリット";
+    this.titleEn = "Merits"
   }
 }
 
@@ -52,7 +52,6 @@ const app = new Vue({
       publicity: new Publicity(),
       trend: new Trend(),
       measures: [],
-      merits: [],
       selected: null,
       keyword: "",
       searched: false,
@@ -104,11 +103,6 @@ const app = new Vue({
 	);
       }, (response) => {
 	console.log('Error GET /trend-score', response);      
-      });
-      this.$http.get('/merits', params).then((response) => {
-	this.merits = response.body.sentences;
-      }, (response) => {
-	console.log('Error GET /merits', response);      
       });
       this.$http.get('/measures', params).then((response) => {
 	this.measures = response.body.sentences;

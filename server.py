@@ -171,13 +171,6 @@ def trend_score():
         "sentences": text
     }
 
-@get('/merits')
-def get_merits():
-    keyword = request.query["keyword"].decode('utf-8')
-    relationResults = relationGen('affect', keyword, None)
-    #relationResults = filter_by_classifier(relationResults, "-1")
-    return {"sentences": relationResults}
-
 
 @get('/measures')
 def get_measures():
