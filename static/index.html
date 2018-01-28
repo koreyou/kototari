@@ -40,7 +40,7 @@
                >
               <md-ripple>
                 <div v-if="item.score > 0">
-                  {{ item.score }}<br/>
+                  {{ item.score | round(2) }}<br/>
                   {{ item.titleEn }}
                 </div>
               </md-ripple>

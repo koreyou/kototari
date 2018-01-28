@@ -114,3 +114,18 @@ const app = new Vue({
     },
   },
 });
+
+
+Vue.filter('round', ((value, decimals) => {
+  if (!value) {
+    value = 0;
+  }
+  if (!decimals) {
+    // Round to 0 (integer)
+    decimals = 0;
+  }
+  const numerator = Math.round(value * Math.pow(10, decimals));
+  const delimiter = Math.pow(10, decimals);
+  value = numerator / delimiter;
+  return value;
+}));
