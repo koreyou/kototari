@@ -10,3 +10,14 @@
 {"content": "", "title": "\u4e0a\u53f8\u304c\u5acc\u3060"}
 {"content": "", "title": "\u6b8b\u696d\u3092\u3082\u3063\u3068\u3084\u308a\u305f\u3044"}
 {"content": "", "title": "\u30cd\u30c3\u30c8\u306e\u901f\u5ea6\u304c\u9045\u304f\u3066\u3044\u3084\u3060"}
+{"content": "", "title": "\u30d1\u30bd\u30b3\u30f3\u304c\u304a\u3082\u3059\u304e\u3066\u4f7f\u3044\u306b\u304f\u3044\u3002"}
+{"content":"","title":"残業が多いのが嫌だ"}
+{"content":"","title":"PCのスペックが足りない"}
+{"content":"","title":"残業は困る"}
+{"content":"","title":"会議時間が長くて嫌だ"}
+{"content":"","title":"残業がすごい嫌だ"}
+{"content":"","title":"ネットのアクセス制限はとても困る"}
+{"content":"","title":"残業が困る"}
+{"content":"","title":"上司が嫌だ"}
+{"content":"","title":"残業をもっとやりたい"}
+{"content":"","title":"ネットの速度が遅くて嫌だ"}
