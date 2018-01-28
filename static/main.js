@@ -88,7 +88,7 @@ const app = new Vue({
       });
       this.$http.get('/mention-score', params).then((response) => {
 	this.mentions = new Mentions(
-	  calcSize(response.body.num / response.body.numall),
+	  calcSize(response.body.num / response.body.numall) * 1.5,
 	  response.body.num,
 	  response.body.sentences
 	);
@@ -97,10 +97,11 @@ const app = new Vue({
       });
       this.$http.get('/trend-score', params).then((response) => {
 	this.trend = new Trend(
-	  calcSize(response.body.score),
+	  calcSize(response.body.score) * 0.8,
 	  response.body.score,
 	  response.body.sentences
 	);
+	
       }, (response) => {
 	console.log('Error GET /trend-score', response);      
       });
