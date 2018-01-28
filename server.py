@@ -41,7 +41,6 @@ def _index_html():
 
 
 def calc_mention_score(human, pick_string):
-
     # keyには自分で取得したAuthorization Tokenをいれる
     key = "n0eFu6OHQDN3yzfveQqTJav0nIsevy"
     headers = {
@@ -53,6 +52,7 @@ def calc_mention_score(human, pick_string):
 
     count_all = 0
     count = 0
+    list_ = []
 
     for i in range(0, len(human)):
         count_all = count_all + 1
@@ -76,13 +76,12 @@ def calc_mention_score(human, pick_string):
 
         #if s == s2.encode('utf-8') or s == s3.encode('utf-8'):
         if s == s2 or s == s3:
-
             count = count + 1
+            list_.append(human[i])
 
-    ret = [0, 0]
-    ret[0] = count_all
-    ret[1] = count
-    return ret
+    count_all
+    count
+    return count_all, count, list_
 
 
 @get('/mention-score')
@@ -96,7 +95,7 @@ def mention_score():
                 sentences.append(json.loads(line)["title"])
             except ValueError:
                 pass
-    num_all, num = calc_mention_score(sentences, keyword)
+    num_all, num, sentences = calc_mention_score(sentences, keyword)
     return {
         "num": num,
         "numall": num_all,
