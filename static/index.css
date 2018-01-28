@@ -72,3 +72,7 @@ img.logo {
     width: 60px;
     margin: 0 10px 0 10px;
 }
+
+.search-view {
+    padding: 32px;
+}

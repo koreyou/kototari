@@ -54,55 +54,9 @@ const app = new Vue({
       measures: [],
       merits: [],
       selected: null,
+      keyword: "",
+      searched: false,
     };
-  },
-  created: function() {
-    function calcSize(x) {
-      const BASE_SIZE = 30;
-      const SIZE_COEFF = 100;
-      const MAX_SIZE = 150;
-      return Math.min(SIZE_COEFF * x + BASE_SIZE, MAX_SIZE); 
-    }
-    this.$http.get('/publicity-score').then((response) => {
-      this.publicity = new Publicity(
-	calcSize(response.body.num / response.body.numall),
-	response.body.num,
-	response.body.sentences
-      );
-      this.publicitySize = calcSize(
-	response.body.num / response.body.numall);
-      this.numPublicity = response.body.num;
-    }, (response) => {
-      console.log('Error GET /publicity-score', response);      
-    });
-    this.$http.get('/mention-score').then((response) => {
-      this.mentions = new Mentions(
-	calcSize(response.body.num / response.body.numall),
-	response.body.num,
-	response.body.sentences
-      );
-    }, (response) => {
-      console.log('Error GET /mention-score', response);      
-    });
-    this.$http.get('/trend-score').then((response) => {
-      this.trend = new Trend(
-	calcSize(response.body.score),
-	response.body.score,
-	response.body.sentences
-      );
-    }, (response) => {
-      console.log('Error GET /trend-score', response);      
-    });
-    this.$http.get('/merits').then((response) => {
-      this.merits = response.body.sentences;
-    }, (response) => {
-      console.log('Error GET /merits', response);      
-    });
-    this.$http.get('/measures').then((response) => {
-      this.measures = response.body.sentences;
-    }, (response) => {
-      console.log('Error GET /measures', response);      
-    });
   },
   methods: {
     sizeStyle: function(s) {
@@ -111,6 +65,56 @@ const app = new Vue({
 	'height': s + 'px',
 	'line-height': s + 'px'
       };
+    },
+    search: function() {
+      function calcSize(x) {
+	const BASE_SIZE = 30;
+	const SIZE_COEFF = 100;
+	const MAX_SIZE = 150;
+	return Math.min(SIZE_COEFF * x + BASE_SIZE, MAX_SIZE); 
+      }
+      this.searched = true;
+      const params = {"params": {"keyword": this.keyword}}
+      this.$http.get('/publicity-score', params).then((response) => {
+	this.publicity = new Publicity(
+	  calcSize(response.body.num / response.body.numall),
+	  response.body.num,
+	  response.body.sentences
+	);
+	this.publicitySize = calcSize(
+	  response.body.num / response.body.numall);
+	this.numPublicity = response.body.num;
+      }, (response) => {
+	console.log('Error GET /publicity-score', response);      
+      });
+      this.$http.get('/mention-score', params).then((response) => {
+	this.mentions = new Mentions(
+	  calcSize(response.body.num / response.body.numall),
+	  response.body.num,
+	  response.body.sentences
+	);
+      }, (response) => {
+	console.log('Error GET /mention-score', response);      
+      });
+      this.$http.get('/trend-score', params).then((response) => {
+	this.trend = new Trend(
+	  calcSize(response.body.score),
+	  response.body.score,
+	  response.body.sentences
+	);
+      }, (response) => {
+	console.log('Error GET /trend-score', response);      
+      });
+      this.$http.get('/merits', params).then((response) => {
+	this.merits = response.body.sentences;
+      }, (response) => {
+	console.log('Error GET /merits', response);      
+      });
+      this.$http.get('/measures', params).then((response) => {
+	this.measures = response.body.sentences;
+      }, (response) => {
+	console.log('Error GET /measures', response);      
+      });
     },
   },
 });

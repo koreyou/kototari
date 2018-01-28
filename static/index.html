@@ -31,7 +31,25 @@
       </div>
     </md-toolbar>
     <div class="main-content">
-      <div class="md-layout md-gutter">
+      <form novalidate class="md-layout-row md-gutter search-view"
+            @submit.prevent="search"
+            v-if="!searched">
+        <span class="md-subheading">
+          Search for Complaints
+        </span>
+        <div class="md-layout-row md-layout-wrap md-gutter">
+          <div class="md-flex md-flex-small-100">
+            <md-field>
+              <label for="keyword">Keyword</label>
+              <md-input name="keyword" id="keyword" v-model="keyword" />
+            </md-field>
+          </div>
+        </div>
+        <md-button type="submit" class="md-primary">
+          Go
+        </md-button>
+      </form>
+      <div v-if="searched" class="md-layout md-gutter">
         <div class="md-layout-item layout-divider">
           <div class="md-layout md-gutter">
             <md-avatar

@@ -87,6 +87,7 @@ def calc_mention_score(human, pick_string):
 
 @get('/mention-score')
 def mention_score():
+    keyword = request.query["keyword"].decode('utf-8')
     sentences = []
     
     with open('db.txt') as fin:
@@ -95,7 +96,7 @@ def mention_score():
                 sentences.append(json.loads(line)["title"])
             except ValueError:
                 pass
-    num_all, num = calc_mention_score(sentences, "残業")
+    num_all, num = calc_mention_score(sentences, keyword)
     return {
         "num": num,
         "numall": num_all,
@@ -106,7 +107,8 @@ def mention_score():
 @get('/publicity-score')
 def publicity_score():
     # ここに投稿数を書く
-    relationResults = relationGen('affect','残業',None)
+    keyword = request.query["keyword"].decode('utf-8')
+    relationResults = relationGen('affect', keyword, None)
     return {
         "num": len(relationResults),
         "numall": 1000,
@@ -161,7 +163,8 @@ def filter_by_classifier(sentences, label):
 
 @get('/trend-score')
 def trend_score():
-    score, text = trend("残業")
+    keyword = request.query["keyword"].decode('utf-8')
+    score, text = trend(keyword)
     # ここに投稿数を書く
     return {
         "score": score,
@@ -170,14 +173,16 @@ def trend_score():
 
 @get('/merits')
 def get_merits():
-    relationResults = relationGen('affect', '残業', None)
+    keyword = request.query["keyword"].decode('utf-8')
+    relationResults = relationGen('affect', keyword, None)
     #relationResults = filter_by_classifier(relationResults, "-1")
     return {"sentences": relationResults}
 
 
 @get('/measures')
 def get_measures():
-    relationResults = relationGen('affect', None, '残業')
+    keyword = request.query["keyword"].decode('utf-8')
+    relationResults = relationGen('affect', None, keyword)
     #relationResults = filter_by_classifier(relationResults, "1")
     return {"sentences": relationResults}
 
