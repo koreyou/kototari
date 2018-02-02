@@ -1,6 +1,7 @@
-# Mini Debating AI
+# コトタリ君
 
-自然言語APIを使って作った、性能が劣る簡易版ディベート型人工知能です。
+自然言語APIを使って作ったアプリです。
+会社の不満を吸い上げ、それを解決すべき根拠とともにマネージャーに提示します。
 
 ## 使い方
 
@@ -9,8 +10,8 @@
 プロジェクトをcloneします。
 
 ```
-git clone http://gitlab.osstl.yrl.intra.hitachi.co.jp/70633085/mini-debating-ai.git
-cd mini-debating-ai
+git clone https://github.com/koreyou/kototari.git
+cd kototari
 ```
 
 必要なライブラリをインストールします。
@@ -27,18 +28,25 @@ pip install -r requirements.txt
 python server.py --port 8080
 ```
 
-ホストサーバが`example.crl.hitachi.co.jp`だとすると、`http://example.crl.hitachi.co.jp:8080/`からアプリにアクセスできます。
+ホストサーバからは、`http://localhost:8080/`でアプリにアクセスできます。
 
 なお、本アプリは古いIEでは動きません。
 
 ## 開発者情報
 
-本プロジェクトはフロントエンドのみで簡潔されており、ホスティング部分のみPythonの[bottleフレームワーク](https://bottlepy.org/)を使っています。
-
-フロントエンドは[Vue.js](https://vuejs.org/)と[Vue Material](https://vuematerial.io/)を活用しており、ES6やHTML5の機能を使っています。
+本プロジェクトに改変を加えるための手続きをしめします。
 
 本アプリは、次のようにAPIを使っています。
 
-1. [価値検索](http://alopece.crl.hitachi.co.jp/value-dictionaries/v1/ui/#!/ValueDictionary/value_search)を使い、キーワードに関係する価値と、その根拠となる文を検索します。
-2. [証拠性推定](http://alopece.crl.hitachi.co.jp/supportiveness/v1/ui/#!/supportiveness/supportiveness_classify)を使い、1で取得した文が本当に証拠として使えるかを分類・絞り込むとともに、各文がその価値を「促進」(p)するか「抑制」(s)するかを分類し、キーワードに対する賛成意見なのか、反対意見なにかを得ます。
-3. [音声合成](http://alopece.crl.hitachi.co.jp/speech/v1/ui/#/Speech)を使い、クリックされた文を読み上げます。なお、音声合成APIは非同期のため、[GET](http://alopece.crl.hitachi.co.jp/speech/v1/ui/#!/Speech/get_speech)に対してポリングをして音声のURLを取得します。
+1. 関係性抽出：構文木を使ったルールによって[^1]、入力された文に含まれる関係性を抽出。
+2. 関係性検索：構文木を使ったルールによって[^1]、指定の関係性を持つ文を検索。
+3. トレンド分析：検索のヒット数の過渡的変化からどれだけ注目されている単語であるかを算出します。
+
+[^1]: [Yanai et al.. 2017. StruAP: A Tool for Bundling Linguistic Trees through Structure-based Abstract Pattern. EMNLP.](http://aclweb.org/anthology/D/D17/D17-2006.pdf)
+
+これらのAPIは一般に公開されていないため、これらに相当する機能を作る必要があります。
+
+本プロジェクトはフロントエンドのみで完結されており、ホスティング部分のみPythonの[bottleフレームワーク](https://bottlepy.org/)を使っています。
+フロントエンドは[Vue.js](https://vuejs.org/)と[Vue Material](https://vuematerial.io/)を活用しており、ES6やHTML5の機能を使っています。
+
+本APIはハッカソンの成果として作られたものなので、現在DBに該当する機能はテキストファイル `db.txt` として実装されています。このファイルの1行はユーザの投稿を示すjsonファイルとなっています。
